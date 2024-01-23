@@ -10,14 +10,8 @@ class AesKey {
   }
 
   static newKey(secret) {
-    console.log('Secret:')
-    console.log(secret)
     var key = CryptoJS.enc.Utf8.parse(secret);
     var iv = CryptoJS.lib.WordArray.create(key.words.slice(0, 4));
-    console.log('Key:')
-    console.log(key)
-    console.log('IV:')
-    console.log(iv)
     return new AesKey(key, iv)
   }
 }
@@ -36,8 +30,6 @@ DECRYPT_BUTTON.click()
 
 function encrypt(plainText, aesKey) {
   // Encrypt the plaintext
-  console.log('Secret for encrypt:')
-  console.log(aesKey.getPlainKey())
   var cipherText = CryptoJS.AES.encrypt(plainText, aesKey.getPlainKey(),
     // {
     // iv: aesKey.iv,
@@ -45,7 +37,7 @@ function encrypt(plainText, aesKey) {
     // padding: CryptoJS.pad.Pkcs7
     // }
     );
-return cipherText;
+return cipherText.toString();
 }
 
 function decrypt(cipherText, aesKey) {
@@ -53,7 +45,6 @@ function decrypt(cipherText, aesKey) {
   let iv1 = aesKey.iv
   
   var key = aesKey.getPlainKey()
-  // var cipherBytes = CryptoJS.enc.Base64.parse(cipherText);
 
   var decrypted = CryptoJS.AES.decrypt(cipherText, key,
   //   {
@@ -75,7 +66,6 @@ function decryptData() {
   var decryptedData = decrypt(encryptedData, aesKey)
   console.log(data)
   console.log(encryptedData)
-  console.log('Decrypted:')
   console.log(decryptedData)
   var encryptedData = CryptoJS.AES.encrypt(data, secret)
   var decryptedDataRaw = CryptoJS.AES.decrypt(encryptedData, secret)
