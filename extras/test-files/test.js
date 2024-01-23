@@ -31,11 +31,11 @@ DECRYPT_BUTTON.click()
 function encrypt(plainText, aesKey) {
   // Encrypt the plaintext
   var cipherText = CryptoJS.AES.encrypt(plainText, aesKey.getPlainKey(),
-    // {
-    // iv: aesKey.iv,
-    // mode: CryptoJS.mode.CBC,
-    // padding: CryptoJS.pad.Pkcs7
-    // }
+    {
+    iv: aesKey.iv,
+    mode: CryptoJS.mode.CBC,
+    padding: CryptoJS.pad.Pkcs7
+    }
     );
 return cipherText.toString();
 }
@@ -47,11 +47,11 @@ function decrypt(cipherText, aesKey) {
   var key = aesKey.getPlainKey()
 
   var decrypted = CryptoJS.AES.decrypt(cipherText, key,
-  //   {
-  //     iv: iv1,
-  //     mode: CryptoJS.mode.CBC,
-  //     padding: CryptoJS.pad.Pkcs7
-  // }
+    {
+      iv: iv1,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7
+  }
   );
 
   return decrypted.toString(CryptoJS.enc.Utf8);
