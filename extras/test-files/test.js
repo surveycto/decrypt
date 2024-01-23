@@ -45,7 +45,7 @@ function encrypt(plainText, aesKey) {
     // padding: CryptoJS.pad.Pkcs7
     // }
     );
-return cipherText.toString();
+return cipherText;
 }
 
 function decrypt(cipherText, aesKey) {
@@ -53,9 +53,9 @@ function decrypt(cipherText, aesKey) {
   let iv1 = aesKey.iv
   
   var key = aesKey.getPlainKey()
-  var cipherBytes = CryptoJS.enc.Base64.parse(cipherText);
+  // var cipherBytes = CryptoJS.enc.Base64.parse(cipherText);
 
-  var decrypted = CryptoJS.AES.decrypt({ciphertext: cipherBytes}, key,
+  var decrypted = CryptoJS.AES.decrypt(cipherText, key,
   //   {
   //     iv: iv1,
   //     mode: CryptoJS.mode.CBC,
