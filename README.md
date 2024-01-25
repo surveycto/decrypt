@@ -64,7 +64,8 @@ For named parameters, this field plug-in has 3 required parameters and 1 optiona
 Add a parameter for each piece of ciphertext. The name of the parameter can be anything. For example, let's say there are three form fields that store ciphertext: "enc_name", "enc_age", and "enc_marital". You can give the field this *appearance*:
 
 ```
-custom-decrypt(passkey=${passkey}, iv=${iv}, salt=${salt}, n=${enc_name}, a=${enc_age}, m=${enc_marital})
+custom-decrypt(passkey=${passkey}, iv=${iv}, salt=${salt},
+n=${enc_name}, a=${enc_age}, m=${enc_marital})
 ```
 
 The first three parameters are the required parameters, while the fourth, fifth, and sixth parameters take the encrypted data. These parameters have the names "n", "a", and "m", but their names don't actually matter. The field *value* will be the decrypted values of the fields "enc_name", "enc_age", and "enc_marital" in that order in a pipe-separated list.
@@ -76,7 +77,7 @@ Here are the named parameters:
 |`passkey` (required)| The passkey that was used to encrypt the data, which will be used to decrypt the data. |
 |`iv` (required)| The initialization vector (IV) that was used to encrypt the data, which will be used to decrypt the data. |
 |`salt` (required) | The salt that was used to encrypt the data, which will be used to decrypt the data. |
-|`separator` (optional) | The separator used in the list returned by the field plug-in. This should be a value that does not exist in your decrypted data (but it can exist in the ciphertext).<br>**Default**: `|` |
+|`separator` (optional) | The separator used in the list returned by the field plug-in. This should be a value that does not exist in your decrypted data (but it can exist in the ciphertext).<br>**Default**: `\|` |
 
 ### Default SurveyCTO feature support
 
