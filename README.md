@@ -53,7 +53,7 @@ When you reach the field, it will say "Decrypted data:" in at the top, followed 
 
 1. Download the [sample form](https://github.com/scto-sandbox/decrypt/raw/main/extras/sample-form/Decryption%20sample%20form.xlsx).
 1. Download the [sample data](https://github.com/scto-sandbox/decrypt/raw/main/extras/sample-form/encrypted_data.xlsx).
-1. Download the [decrypt.fieldplugin.zip](https://github.com/surveycto/decrypt/raw/main/decrypt.fieldplugin.zip) field plug-in file.
+1. Download the [decrypt.fieldplugin.zip](https://github.com/scto-sandbox/decrypt/raw/main/decrypt.fieldplugin.zip) field plug-in file.
 1. Upload the sample form to your server with the sample data and field plug-in file as attachments.
 1. When filling out the form, when prompted for the passkey, enter `password`.
 
