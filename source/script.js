@@ -74,5 +74,13 @@ function decrypt (cipherText, passkey, iv, salt = '', mode = 'ccm') {
     'salt': salt,
     'mode': mode
   }
-  return sjcl.decrypt(passkey, JSON.stringify(dData))
+  try {
+    return sjcl.decrypt(passkey, JSON.stringify(dData))
+  } catch (e) {
+    if (e['message'].indexOf('tag doesn\'t match') > -1) {
+      return '(Unable to decrypt. Please check your passkey and other encryption details.)'
+    } else {
+      throw e
+    }
+  }
 }
