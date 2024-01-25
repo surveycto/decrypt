@@ -11,7 +11,7 @@ Currently, the best way to secure SurveyCTO server dataset data is to use existi
 * Enforce device security settings from the server, such as requiring device encryption and a device passcode. You can learn more in our documentation [Managing device security](https://docs.surveycto.com/03-collecting-data/01-mobile-data-collection/05b.managing-device-security.html).
 * Ensure only authorized users have access to data using teams and user roles. You can learn more about teams in our support article [How to manage your teams](https://support.surveycto.com/hc/en-us/articles/16472107311763-How-to-manage-your-teams), and you can learn more about user roles in our documentation [Managing user roles](https://docs.surveycto.com/04-monitoring-and-management/01-the-basics/00b.managing-user-roles.html).
 
-[![](extras/readme-images/beta-release-download.jpg)](https://github.com/surveycto/decrypt/raw/main/decrypt.fieldplugin.zip)
+[![](extras/readme-images/beta-release-download.jpg)](https://github.com/scto-sandbox/decrypt/raw/main/decrypt.fieldplugin.zip)
 
 
 *This plug-in is currently under beta. If you you find a problem with the field plug-in, please email support@surveycto.com, or submit an issue to this GitHub repo.*
