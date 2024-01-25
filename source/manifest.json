@@ -1,0 +1,9 @@
+{
+	"name" : "Decrypt",
+	"author" : "Dobility",
+	"version": "0.0.0",
+	"supportedFieldTypes": ["text"],
+	"externalJs": [ "sjcl.js" ],
+	"hideDefaultRequiredMessage": true,
+	"hideDefaultConstraintMessage": true
+}
