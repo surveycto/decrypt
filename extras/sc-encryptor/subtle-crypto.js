@@ -114,6 +114,10 @@ async function keyFromB64 (key, algorithm = 'AES-GCM') {
   }
 }
 
+async function b64FromKey(key) {
+  return pack(await crypto.subtle.exportKey('raw', key))
+}
+
 /*
 * Encrypts data using the given key. 
 * @param {String} data: The data that will be encrypted.
