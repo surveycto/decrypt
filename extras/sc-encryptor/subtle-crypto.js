@@ -50,7 +50,6 @@ const base64ToUintArray = (a) => {
 * @return {String} 
 */
 function urlSafeToB64 (base64) {
-  console.log(base64)
   return base64.replaceAll('-', '+').replaceAll('_', '/')
 }
 
@@ -90,8 +89,13 @@ const decode = (bytestream) => {
   return decoder.decode(bytestream)
 }
 
+/*
+* Turns a Base64-encoded key into a CryptoKey object. If it is already an object, it just returns the key that was given. 
+* @param {String} key
+* @param {String} algorithm: The algorithm being used.
+* @return {CryptoKey} 
+*/
 async function keyFromB64 (key, algorithm = 'AES-GCM') {
-console.log(key)
   const keyType = typeof key
   switch (keyType) {
     case 'string': {
@@ -110,38 +114,35 @@ console.log(key)
   }
 }
 
-
-
+/*
+* Encrypts data using the given key. 
+* @param {String} data: The data that will be encrypted.
+* @param {CryptoKey, String} key: Encryption key used to encrypt the data. It can be either a CryptoKey object that is all prepared, or a Base64-encoded key as a String that the function will turn into a CryptoKey object.
+* @return {Array[String]} First item is the ciphertext, second is the IV. Both are Base64-encoded strings.
+*/
 const encrypt = async (data, key) => {
   key = await keyFromB64(key)
-  console.log(key)
   const encoded = encode(data)
   const iv = generateIv()
   const cipher = await window.crypto.subtle.encrypt({
     name: 'AES-GCM',
     iv: iv,
   }, key, encoded)
-  console.log('Encryption results:')
-  console.log(cipher)
-  console.log(iv)
-  console.log(pack(cipher))
-  console.log(uint8ArrayToBase64(iv))
-  console.log([
-    pack(cipher),
-    uint8ArrayToBase64(iv),])
   return [
     pack(cipher),
     uint8ArrayToBase64(iv),]
-  // return [cipher, iv]
 
 }
 
+/*
+* Decrypts data using the given key. 
+* @param {String} ciphertext: The data that will be decrypted.
+* @param {CryptoKey, String} key: Encryption key used to encrypt the data, which will now be used to decrypt the data. It can be either a CryptoKey object that is all prepared, or a Base64-encoded key as a String that the function will turn into a CryptoKey object.
+* @param {String} iv: The IV that was used to encrypt the data.
+* @return {CryptoKey} 
+*/
 const decrypt = async (ciphertext, key, iv) => {
   // try {
-  console.log('Decrypting')
-  console.log(ciphertext)
-  console.log(key)
-  console.log(iv)
   var encoded = await crypto.subtle.decrypt({
     name: 'AES-GCM',
     iv: base64ToUintArray(iv),
@@ -153,7 +154,5 @@ const decrypt = async (ciphertext, key, iv) => {
   //   return
   // }
   // const encoded = await window.cr
-  console.log('Complete:')
-  console.log(encoded)
   return decode(encoded)
 }
