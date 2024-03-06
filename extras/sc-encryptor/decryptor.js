@@ -5,13 +5,14 @@ const DECRYPT_BUTTON = document.querySelector('#decrypt-button')
 const DECRYPTED = document.querySelector('#decrypted')
 
 DECRYPT_BUTTON.onclick = async () => {
-  var ct = unpack(CIPHER_TEXT.value)
-  var key = await keyFromB64(PASSKEY.value)
-  var iv = unpack(IV.value)
+  var ct = CIPHER_TEXT.value
+  var key = PASSKEY.value
+  var iv = IV.value
   var d = await decrypt(
     ct,
     key,
-    iv
+    iv,
+    'AES-CBC'
     )
   console.log(d)
 }
