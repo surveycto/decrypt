@@ -1,8 +1,8 @@
 // https://davidmyers.dev/blog/a-practical-guide-to-the-web-cryptography-api
 
-const generateKey = async () => {
+const generateKey = async (algorithm = 'AES-CBC') => {
   return window.crypto.subtle.generateKey({
-    name: 'AES-GCM',
+    name: algorithm,
     length: 256,
   }, true, ['encrypt', 'decrypt'])
 }
@@ -23,7 +23,7 @@ const encode = (data) => {
 */
 const generateIv = () => {
   // https://developer.mozilla.org/en-US/docs/Web/API/AesGcmParams
-  return crypto.getRandomValues(new Uint8Array(12))
+  return crypto.getRandomValues(new Uint8Array(16))
 }
 
 /*
@@ -95,7 +95,7 @@ const decode = (bytestream) => {
 * @param {String} algorithm: The algorithm being used.
 * @return {CryptoKey} 
 */
-async function keyFromB64 (key, algorithm = 'AES-GCM') {
+async function keyFromB64 (key, algorithm = 'AES-CBC') {
   const keyType = typeof key
   switch (keyType) {
     case 'string': {
@@ -124,12 +124,12 @@ async function b64FromKey(key) {
 * @param {CryptoKey, String} key: Encryption key used to encrypt the data. It can be either a CryptoKey object that is all prepared, or a Base64-encoded key as a String that the function will turn into a CryptoKey object.
 * @return {Array[String]} First item is the ciphertext, second is the IV. Both are Base64-encoded strings.
 */
-const encrypt = async (data, key) => {
-  key = await keyFromB64(key)
+const encrypt = async (data, key, algorithm = 'AES-CBC') => {
+  key = await keyFromB64(key, algorithm)
   const encoded = encode(data)
   const iv = generateIv()
   const cipher = await window.crypto.subtle.encrypt({
-    name: 'AES-GCM',
+    name: algorithm,
     iv: iv,
   }, key, encoded)
   return [
@@ -145,18 +145,18 @@ const encrypt = async (data, key) => {
 * @param {String} iv: The IV that was used to encrypt the data.
 * @return {CryptoKey} 
 */
-const decrypt = async (ciphertext, key, iv) => {
-  // try {
+const decrypt = async (ciphertext, key, iv, algorithm = 'AES-CBC') => {
+  try {
   var encoded = await crypto.subtle.decrypt({
-    name: 'AES-GCM',
+    name: algorithm,
     iv: base64ToUintArray(iv),
-  }, await keyFromB64(key), unpack(ciphertext))
+  }, await keyFromB64(key, algorithm), unpack(ciphertext))
 
-  // } catch (e) {
-  //   console.log('Error:')
-  //   console.log(e)
-  //   return
-  // }
+  } catch (e) {
+    console.log('Error:')
+    console.log(e)
+    return
+  }
   // const encoded = await window.cr
   return decode(encoded)
 }
