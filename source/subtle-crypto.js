@@ -197,10 +197,24 @@ const subtleDecrypt = async (ciphertext, iv, key, algorithm = 'AES-CBC') => {
     }
   }
 
-  var encoded = await crypto.subtle.decrypt({
-    name: algorithm,
-    iv: raw_iv,
-  }, await keyFromB64(key, algorithm), raw_ciphertext)
+  var subtleCryptoKey = await keyFromB64(key, algorithm)
+
+  try {
+
+    var encoded = await crypto.subtle.decrypt({
+      name: algorithm,
+      iv: raw_iv,
+    }, subtleCryptoKey, raw_ciphertext)
+  } catch (e) {
+    switch (e.name) {
+      case 'OperationError': {
+        throw new EncryptionError(`Unable to decrypt data using the information provided. Please check your ciphertext and encryption key.`)
+      } default: {
+        throw e
+      }
+    }
+  }
+
 
   return decode(encoded)
 }

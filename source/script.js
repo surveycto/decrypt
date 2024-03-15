@@ -1,24 +1,24 @@
 /* global setAnswer, fieldProperties */
 
-var fieldProperties = {
-  CURRENT_ANSWER: '',
-  READONLY: false,
-  PARAMETERS: [
-    {
-      "key": "key",
-      "value": 'RQmHY+vQ5UQOeufZZQHZhg=='
-    },
-    {
-      "key": "ciphertext",
-      "value": "f5l2KcvRKodlSf6n06tqgQ==|XSFHs2RWb/w2bo5VC2+ipg=="
-    }
-  ]
-}
+// var fieldProperties = {
+//   CURRENT_ANSWER: '',
+//   READONLY: false,
+//   PARAMETERS: [
+//     {
+//       "key": "key",
+//       "value": 'RQmHY+vQ5UQOeufZZQHZhg=='
+//     },
+//     {
+//       "key": "ciphertext",
+//       "value": "f5l2KcvRKodlSf6n06tqgQ==|XSFHs2RWb/w2bo5VC2+ipg=="
+//     }
+//   ]
+// }
 
-function setAnswer (a) {
-  console.log('New answer:')
-  console.log(a)
-}
+// function setAnswer (a) {
+//   console.log('New answer:')
+//   console.log(a)
+// }
 
 var parameters = fieldProperties.PARAMETERS
 
@@ -55,7 +55,7 @@ async function decryptAll () {
 
   const addWarning = (d) => {
     plaintext.push(d)
-    displayHtml.push(`<p>${d}</p>`)
+    displayHtml.push(`<li>${d}</li>`)
   }
 
   for (var c = 0; c < cipherData.length; c++) {
@@ -67,12 +67,11 @@ async function decryptAll () {
     try {
       var pt = await decrypt(d[0], d[1], passkey)
       plaintext.push(pt)
-      displayHtml.push('<p>Success</p>')
+      displayHtml.push('<li>Success</li>')
     } catch (e) {
       if (['EncodingError', 'EncryptionError'].includes(e.name)) {
         addWarning(`Failed: ${e.message}`)
       } else {
-        console.log('Other error')
         throw e
       }
     }
