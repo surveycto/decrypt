@@ -1,25 +1,24 @@
-// /* global setAnswer, fieldProperties */
+/* global setAnswer, fieldProperties */
 
-// var fieldProperties = {
-//   CURRENT_ANSWER: '',
-//   READONLY: false,
-//   PARAMETERS: [
-//     {
-//       "key": "key",
-//       // "value": 'J0UhmAygFQY6OnVAEug5tg=='
-//       "value": 'J0UhmAygFQY6OnVAEug5tg='
-//     },
-//     {
-//       "key": "ciphertext",
-//       "value": "S+iTPOq1mSx4PQrcLyTcqA=="
-//     }
-//   ]
-// }
+var fieldProperties = {
+  CURRENT_ANSWER: '',
+  READONLY: false,
+  PARAMETERS: [
+    {
+      "key": "key",
+      "value": 'RQmHY+vQ5UQOeufZZQHZhg=='
+    },
+    {
+      "key": "ciphertext",
+      "value": "f5l2KcvRKodlSf6n06tqgQ==|XSFHs2RWb/w2bo5VC2+ipg=="
+    }
+  ]
+}
 
-// function setAnswer (a) {
-//   console.log('New answer:')
-//   console.log(a)
-// }
+function setAnswer (a) {
+  console.log('New answer:')
+  console.log(a)
+}
 
 var parameters = fieldProperties.PARAMETERS
 
@@ -54,7 +53,7 @@ async function decryptAll () {
   var plaintext = []
   var displayHtml = []
 
-  const addDecryped = (d) => {
+  const addWarning = (d) => {
     plaintext.push(d)
     displayHtml.push(`<p>${d}</p>`)
   }
@@ -62,10 +61,21 @@ async function decryptAll () {
   for (var c = 0; c < cipherData.length; c++) {
     let d = cipherData[c].split('|')
     if (d.length < 2) {
-      addDecryped('[Missing IV. Unable to decrypt.]')
+      addWarning('Failed: Missing IV. Unable to decrypt.')
       continue
     }
-    addDecryped(await decrypt(d[0], d[1], passkey))
+    try {
+      var pt = await decrypt(d[0], d[1], passkey)
+      plaintext.push(pt)
+      displayHtml.push('<p>Success</p>')
+    } catch (e) {
+      if (['EncodingError', 'EncryptionError'].includes(e.name)) {
+        addWarning(`Failed: ${e.message}`)
+      } else {
+        console.log('Other error')
+        throw e
+      }
+    }
   }
 
   setAnswer(plaintext.join(separator))
@@ -73,13 +83,5 @@ async function decryptAll () {
 }
 
 async function decrypt (ciphertext, iv, key, mode = 'cbc') {
-  // try {
   return await subtleDecrypt(ciphertext, iv, key)
-  // } catch (e) {
-  //   if (e['message'].indexOf('tag doesn\'t match') > -1) {
-  //     return '(Unable to decrypt. Please check your passkey and other encryption details.)'
-  //   } else {
-  //     throw e
-  //   }
-  // }
 }
