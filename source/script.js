@@ -10,10 +10,6 @@
 //       "value": 'J0UhmAygFQY6OnVAEug5tg='
 //     },
 //     {
-//       "key": "iv",
-//       "value": "gIiYTz5exF2q4Pw0bL5oKg=="
-//     },
-//     {
 //       "key": "ciphertext",
 //       "value": "S+iTPOq1mSx4PQrcLyTcqA=="
 //     }
@@ -32,7 +28,6 @@ var cipherData = []
 var numParameters = parameters.length
 
 var passkey
-var iv
 var separator = '|'
 for (var p = 0; p < numParameters; p++) {
   var pa = parameters[p]
@@ -41,10 +36,6 @@ for (var p = 0; p < numParameters; p++) {
   switch (key) {
     case 'key': {
       passkey = value
-      break
-    }
-    case 'iv': {
-      iv = value
       break
     }
     case 'separator': {
@@ -62,20 +53,28 @@ decryptAll()
 async function decryptAll () {
   var plaintext = []
   var displayHtml = []
+
+  const addDecryped = (d) => {
+    plaintext.push(d)
+    displayHtml.push(`<p>${d}</p>`)
+  }
+
   for (var c = 0; c < cipherData.length; c++) {
-    let decrypted = await decrypt(cipherData[c], passkey, iv)
-    plaintext.push(decrypted)
-    displayHtml.push(`<p>${decrypted}</p>`)
+    let d = cipherData[c].split('|')
+    if (d.length < 2) {
+      addDecryped('[Missing IV. Unable to decrypt.]')
+      continue
+    }
+    addDecryped(await decrypt(d[0], d[1], passkey))
   }
 
   setAnswer(plaintext.join(separator))
-
   document.querySelector('#decrypted').innerHTML = displayHtml.join('\n')
 }
 
-async function decrypt (ciphertext, key, iv, mode = 'cbc') {
+async function decrypt (ciphertext, iv, key, mode = 'cbc') {
   // try {
-  return await subtleDecrypt(ciphertext, key, iv)
+  return await subtleDecrypt(ciphertext, iv, key)
   // } catch (e) {
   //   if (e['message'].indexOf('tag doesn\'t match') > -1) {
   //     return '(Unable to decrypt. Please check your passkey and other encryption details.)'

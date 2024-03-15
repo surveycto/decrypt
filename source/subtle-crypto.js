@@ -145,7 +145,7 @@ const subtleEncrypt = async (data, key, algorithm = 'AES-CBC') => {
 * @param {String} iv: The IV that was used to encrypt the data.
 * @return {CryptoKey} 
 */
-const subtleDecrypt = async (ciphertext, key, iv, algorithm = 'AES-CBC') => {
+const subtleDecrypt = async (ciphertext, iv, key, algorithm = 'AES-CBC') => {
   var encoded = await crypto.subtle.decrypt({
     name: algorithm,
     iv: base64ToUintArray(iv),
