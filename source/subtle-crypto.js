@@ -128,7 +128,7 @@ const subtleEncrypt = async (data, key, algorithm = 'AES-CBC') => {
   key = await keyFromB64(key, algorithm)
   const encoded = encode(data)
   const iv = generateIv()
-  const cipher = await window.crypto.subtle.encrypt({
+  const cipher = await crypto.subtle.encrypt({
     name: algorithm,
     iv: iv,
   }, key, encoded)
