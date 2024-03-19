@@ -4,10 +4,7 @@
 
 Use this field plug-in to decrypt data that was encrypted using AES.
 
-Currently, the best way to secure SurveyCTO server dataset data is to use existing SurveyCTO security features:
-
-* Enforce device security settings from the server, such as requiring device encryption and a device passcode. You can learn more in our documentation [Managing device security](https://docs.surveycto.com/03-collecting-data/01-mobile-data-collection/05b.managing-device-security.html).
-* Ensure only authorized users have access to data using teams and user roles. You can learn more about teams in our support article [How to manage your teams](https://support.surveycto.com/hc/en-us/articles/16472107311763-How-to-manage-your-teams), and you can learn more about user roles in our documentation [Managing user roles](https://docs.surveycto.com/04-monitoring-and-management/01-the-basics/00b.managing-user-roles.html).
+Currently, the best way to secure SurveyCTO server dataset data is to use existing SurveyCTO security features, which you can read about [here](/extras/best_encryption.md]).
 
 However, if you would like an extra level of security, you can also encrypt your CSV data and server dataset data using your own AES encryption key.
 
@@ -17,8 +14,10 @@ However, if you would like an extra level of security, you can also encrypt your
 
 ### Features
 
-* Decrypt data encrypted using AES.
+* Decrypt data encrypted using AES, an extremely popular and secure encryption standard.
 * Decrypt multiple pieces of data in one field plug-in.
+
+Note: This field plug-in currently only supports AES-CBC decryption. If popular enough, we could add other modes, such as AES-GCM. If you don't know what those are, don't worry, you don't have to know them to use this field plug-in.
 
 ### Requirements
 
@@ -40,9 +39,11 @@ Use the [item-at() function](https://docs.surveycto.com/02-designing-forms/01-co
 item-at('|', ${decrypted}, 0)
 ```
 
-<!-- If the encryption details are wrong due to an incorrect passkey, IV, salt, or ciphertext, the data will instead say "(Unable to decrypt. Please check your passkey and other encryption details.)". -->
+If the encryption details are wrong due to an incorrect passkey, IV, salt, or ciphertext, the data will instead be an error message about why the data could not be decrypted.
 
-When you reach the field, it will display your field *label* (and *hint* and media if you include them as well) at the top, followed by the decrypted data in a linebreak-separated list.
+When you reach the field, it will display your field *label* (and *hint* and media if you include them as well) at the top, followed by the results of the decryption. If the decryption was successful, it will say "Success". However, if decryption failed, it will say "Failed", followed by the reason for the decryption failure. It will do this for each piece of encrypted data it receives.
+
+Note: If the provided IV is in the correct format, but the value itself is incorrect, then the decrypted data will be incorrect, and there will not be an error message. Make sure you always provide the correct decryption information.
 
 ### Encrypting your data (IMPORTANT)
 
@@ -53,6 +54,12 @@ f5l2KcvRKodlSf6n06tqgQ==|XSFHs2RWb/w2bo5VC2+ipg==
 ```
 
 Here, the ciphertext is `f5l2KcvRKodlSf6n06tqgQ==`, and the IV is `XSFHs2RWb/w2bo5VC2+ipg==`. You will feed that combined, pipe-separated value into the field plug-in, and if you provide the correct decryption key, the field plug-in will decrypt it for you.
+
+#### Storing encrypted data in a CSV file
+
+You can easily encrypt data using the [**scto-encryption**](https://github.com/surveycti/scto-encryption) Python package. You can create a CSV data with all of your data, and then encrypt that data with that Python package.
+
+Once you have your CSV file with the encrypted data, you can [pre-load it](https://docs.surveycto.com/02-designing-forms/03-advanced-topics/03.preloading.html), and feed that data into the field plug-in. This is demonstrated in the [sample form](#getting-started). 
 
 ## How to use
 
