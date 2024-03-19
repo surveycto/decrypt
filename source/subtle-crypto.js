@@ -151,13 +151,24 @@ async function b64FromKey (key) {
 * @return {Array[String]} First item is the ciphertext, second is the IV. Both are Base64-encoded strings.
 */
 const subtleEncrypt = async (data, key, algorithm = 'AES-CBC') => {
-  key = await keyFromB64(key, algorithm)
+  try {
+    var decodedKey = await keyFromB64(key, algorithm)
+  } catch (e) {
+    switch (e.name) {
+      case 'EncodingError': {
+        throw new EncryptionError(`The Base64 encryption key provided is not properly encoded. Please make sure it is properly encoded: ${key}`, 'EncodingError')
+      } default: {
+        throw e
+      }
+    }
+  }
+  
   const encoded = encode(data)
   const iv = generateIv()
   const cipher = await crypto.subtle.encrypt({
     name: algorithm,
     iv: iv,
-  }, key, encoded)
+  }, decodedKey, encoded)
   return [
     pack(cipher),
     uint8ArrayToBase64(iv),]
