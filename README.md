@@ -4,7 +4,7 @@
 
 Use this field plug-in to decrypt data that was encrypted using AES.
 
-Currently, the best way to secure SurveyCTO server dataset data is to use existing SurveyCTO security features, which you can read about [here](/extras/best_encryption.md]).
+Currently, the best way to secure SurveyCTO server dataset data is to use existing SurveyCTO security features, which you can read about [here](/extras/best_encryption.md).
 
 However, if you would like an extra level of security, you can also encrypt your CSV data and server dataset data using your own AES encryption key.
 
