@@ -23,9 +23,11 @@ Note: This field plug-in currently only supports AES-CBC decryption. If popular 
 
 This field plug-in should work on most collection devices that support field plug-ins.
 
+Use this field plug-in on a [*text* field](https://docs.surveycto.com/02-designing-forms/01-core-concepts/03a.field-types-text.html).
+
 ### Data format
 
-This field returns the decrypted data in a list. The default separator in the list is a pipe `|`, but you can customize this. The order of the decrypted data will be the same as the order of the encrypted data stored in the [parameters](#parameters).
+This field returns the decrypted data in a list. The default separator in the list is a pipe `|`, but you can customize this. The order of the decrypted data will be the same as the order of the encrypted data provided to the [parameters](#parameters).
 
 For example, let's say the first piece of decrypted data has a value of "Adnan", the second has a value of "31", and the third has a value of "1". The field value would be this:
 
@@ -55,9 +57,11 @@ f5l2KcvRKodlSf6n06tqgQ==|XSFHs2RWb/w2bo5VC2+ipg==
 
 Here, the ciphertext is `f5l2KcvRKodlSf6n06tqgQ==`, and the IV is `XSFHs2RWb/w2bo5VC2+ipg==`. You will feed that combined, pipe-separated value into the field plug-in, and if you provide the correct decryption key, the field plug-in will decrypt it for you.
 
+You will provide the this data to the field plug-in using the [parameters](#parameters).
+
 #### Storing encrypted data in a CSV file
 
-You can easily encrypt data using the [**scto-encryption**](https://github.com/surveycti/scto-encryption) Python package. You can create a CSV data with all of your data, and then encrypt that data with that Python package.
+You can easily encrypt data using the [**scto-encryption**](https://github.com/surveycto/scto-encryption) Python package. You can create a CSV data with all of your data, and then encrypt that data with that Python package.
 
 Once you have your CSV file with the encrypted data, you can [pre-load it](https://docs.surveycto.com/02-designing-forms/03-advanced-topics/03.preloading.html), and feed that data into the field plug-in. This is demonstrated in the [sample form](#getting-started). 
 
@@ -79,20 +83,22 @@ If you choose *Manual entry*, the *default* field value will be the example encr
 
 **Warning**: This is just an example, and you should **not** publicly share your encryption key like this. You should use your own encryption key to encrypt and decrypt your data.
 
+If you decide to use a QR code to store your encryption key, make sure that QR code is well-protected, since anyone who has that QR code can decrypt your data.
+
 ### Parameters
 
 For named parameters, this field plug-in has 1 required parameter and 1 optional parameter.
 
-In addition to the named parameters, add a parameter for each piece of ciphertext/IV. The name of the parameter can be anything. For example, let's say there are three form fields that store ciphertext: "enc_name", "enc_age", and "enc_marital". You can give the field this *appearance*:
+In addition to the named parameters, add a parameter for each piece of ciphertext/IV. The name of the parameter can be anything (as long as they are unique). For example, let's say there are three form fields that store ciphertext: "enc_name", "enc_age", and "enc_marital". You can give the field this *appearance*:
 
 ```
 custom-decrypt(key=${key},
-c1=${enc_resp_name},
-c2=${enc_age},
-c3=${enc_marital})
+0=${enc_resp_name},
+1=${enc_age},
+2=${enc_marital})
 ```
 
-The first parameter is the required parameter, while the second, third, and fourth parameters take the encrypted data (which, as discussed [above](#encrypting-your-data-important), includes both the ciphertext and IV). These parameters have the names "c1", "c2", and "c3", but their names don't actually matter. This field's *value* will be the decrypted values of the fields "enc_name", "enc_age", and "enc_marital" in that order in a pipe-separated list.
+The first parameter is the required parameter, while the second, third, and fourth parameters take the encrypted data (which, as discussed [above](#encrypting-your-data-important), includes both the ciphertext and IV). These parameters have the names "0", "1", and "2", but their names don't actually matter (as long as they are unique, e.g. you cannot have two parameters called "0"). This field's *value* will be the decrypted values of the fields "enc_name", "enc_age", and "enc_marital" in that order in a pipe-separated list.
 
 Here are the named parameters:
 
