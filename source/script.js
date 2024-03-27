@@ -1,25 +1,3 @@
-/* global setAnswer, fieldProperties */
-
-// var fieldProperties = {
-//   CURRENT_ANSWER: '',
-//   READONLY: false,
-//   PARAMETERS: [
-//     {
-//       "key": "key",
-//       "value": 'RQmHY+vQ5UQOeufZZQHZhg=='
-//     },
-//     {
-//       "key": "ciphertext",
-//       "value": "f5l2KcvRKodlSf6n06tqgQ==|XSFHs2RWb/w2bo5VC2+ipg=="
-//     }
-//   ]
-// }
-
-// function setAnswer (a) {
-//   console.log('New answer:')
-//   console.log(a)
-// }
-
 var parameters = fieldProperties.PARAMETERS
 
 var cipherData = []
@@ -48,6 +26,10 @@ for (var p = 0; p < numParameters; p++) {
 }
 
 decryptAll()
+
+async function decrypt (ciphertext, iv, key, mode = 'cbc') {
+  return await subtleDecrypt(ciphertext, iv, key)
+}
 
 async function decryptAll () {
   var plaintext = []
@@ -79,8 +61,4 @@ async function decryptAll () {
 
   setAnswer(plaintext.join(separator))
   document.querySelector('#decrypted').innerHTML = displayHtml.join('\n')
-}
-
-async function decrypt (ciphertext, iv, key, mode = 'cbc') {
-  return await subtleDecrypt(ciphertext, iv, key)
 }
