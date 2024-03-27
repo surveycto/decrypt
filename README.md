@@ -8,6 +8,8 @@ Currently, the best way to protect SurveyCTO form data is using our end-to-end e
 
 However, if you would like an extra level of security, you can also encrypt your data using your own AES encryption key. You can even store that data in a CSV file or [server dataset](https://support.surveycto.com/hc/en-us/articles/11854064982675) for [pre-loading](https://docs.surveycto.com/02-designing-forms/03-advanced-topics/03.preloading.html), including data that was encrypted using the [encrypt](https://github.com/surveycto/encrypt/blob/main/README.md) field plug-in.
 
+*To use this field plug-in immediately, see [Getting started](#getting-started) below.*
+
 [![](extras/readme-images/beta-release-download.jpg)](https://github.com/surveycto/decrypt/raw/main/decrypt.fieldplugin.zip)
 
 *This plug-in is currently under beta. If you you find a problem with the field plug-in, please email support@surveycto.com, or submit an issue to this GitHub repo.*
@@ -45,7 +47,7 @@ If the encryption details are wrong due to an incorrect passkey, IV, salt, or ci
 
 When you reach the field, it will display your field *label* (and *hint* and media if you include them as well) at the top, followed by the results of the decryption. If the decryption was successful, it will say "Success". However, if decryption failed, it will say "Failed", followed by the reason for the decryption failure. It will do this for each piece of encrypted data it receives.
 
-Note: If the provided IV is in the correct format, but the value itself is incorrect, then the decrypted data will be incorrect, and there will not be an error message. Make sure you always provide the correct decryption information.
+Note: If the provided encryption key, ciphertext, or IV are in the correct format, but the value itself is incorrect, then the decrypted data will be incorrect, and there will not be an error message. Make sure you always provide the correct decryption information.
 
 ### Encrypting your data (IMPORTANT)
 
