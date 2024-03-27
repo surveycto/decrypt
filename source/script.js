@@ -72,7 +72,7 @@ async function decryptAll () {
       if (['EncodingError', 'EncryptionError'].includes(e.name)) {
         addWarning(`Failed: ${e.message}`)
       } else {
-        throw e
+        addWarning(`Unexpected error:<br>Name: ${e.name}<br>Message: ${e.message}<br>Stack: ${e.stack}`)
       }
     }
   }

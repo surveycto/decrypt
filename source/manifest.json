@@ -1,7 +1,7 @@
 {
 	"name" : "Decrypt",
 	"author" : "Dobility",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"supportedFieldTypes": ["text"],
 	"externalJs": [ "subtle-crypto.js" ],
 	"hideDefaultRequiredMessage": true,
