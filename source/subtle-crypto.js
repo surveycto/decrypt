@@ -1,4 +1,4 @@
-// https://davidmyers.dev/blog/a-practical-guide-to-the-web-cryptography-api
+// Much of this is based on https://davidmyers.dev/blog/a-practical-guide-to-the-web-cryptography-api
 
 class EncryptionError extends Error {
   constructor (message, name = 'EncryptionError') {
