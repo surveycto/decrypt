@@ -43,11 +43,25 @@ Use the [item-at() function](https://docs.surveycto.com/02-designing-forms/01-co
 item-at('|', ${decrypt}, 0)
 ```
 
-If the encryption details are wrong due to an incorrect passkey, IV, salt, or ciphertext, the data will instead be an error message about why the data could not be decrypted.
+If the encryption details are wrong due to an incorrect passkey, IV, salt, or ciphertext, the data will instead be the original input fed into the field plug-in parameters. That way, if the data is plaintext that has simply not been encrypted yet, you will still have that data.
 
 When you reach the field, it will display your field *label* (and *hint* and media if you include them as well) at the top, followed by the results of the decryption. If the decryption was successful, it will say "Success". However, if decryption failed, it will say "Failed", followed by the reason for the decryption failure. It will do this for each piece of encrypted data it receives.
 
-Note: If the provided encryption key, ciphertext, or IV are in the correct format, but the value itself is incorrect, then the decrypted data will be incorrect, and there will not be an error message. Make sure you always provide the correct decryption information.
+Note: If the provided encryption key, ciphertext, or IV are in the correct format, but one of those values is incorrect, then the decrypted data will be incorrect, and there will not be an error message. Make sure you always provide the correct decryption information.
+
+#### Metadata
+
+The metadata will be a pipe-separated list of the decryption status, in the same order as the data (similar to what appeared in the field *label*).
+
+For example, let's say there were three pieces of input. The first two were decrypted successfully as `Bhavna` and `30`, but the third input was `0`, which is not properly formatted encryption data for this field plug-in; it was probably manually entered into the data file without being encrypted first. The field data will be this:
+
+   Bhavna|30|0
+
+And the field metadata will be this:
+
+   Success|Success|Failed: Missing IV. Unable to decrypt.
+
+Use the [plug-in-metadata() function](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#plug-in-metadata) in your form (usually in a [*calculate* field](https://docs.surveycto.com/02-designing-forms/01-core-concepts/03zb.field-types-calculate.html)) to retrieve the metadata.
 
 ### Encrypting your data (IMPORTANT)
 
