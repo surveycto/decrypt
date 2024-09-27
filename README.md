@@ -1,25 +1,23 @@
 # Decrypt (field plug-in)
 
 ## Description
+This field plug-in supports data decryption inside forms using [AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard). First, you must encrypt data either with the [scto-encryption package](https://github.com/surveycto/scto-encryption) (which can be [uploaded into a server dataset and pre-loaded](https://support.surveycto.com/hc/en-us/articles/11854783867539-Guide-to-dataset-publishing)) or encrypt data using the [decrypt field plug-in](https://github.com/surveycto/decrypt) in order to decrypt it. 
 
-Use this field plug-in to decrypt data that was encrypted using AES.
+Together with these other resources, this plug-in provides an upgrade in secure management of sensitive data that is used to identify individuals in the the field. Learn more in [this guide](https://support.surveycto.com/hc/en-us/articles/33842170036499).
 
-Currently, the best way to protect SurveyCTO form data is using our end-to-end encryption feature, which you can learn about in our support article [How to encrypt a form](https://support.surveycto.com/hc/en-us/articles/16472121582483). And, the best way to protect all SurveyCTO data (including server dataset data) is to use existing SurveyCTO security features, which you can read about [here](https://github.com/surveycto/decrypt/blob/main/extras/best_encryption.md).
-
-However, if you would like an extra level of security, you can also encrypt your data using your own AES encryption key. You can even store that data in a CSV file or [server dataset](https://support.surveycto.com/hc/en-us/articles/11854064982675) for [pre-loading](https://docs.surveycto.com/02-designing-forms/03-advanced-topics/03.preloading.html), including data that was encrypted using the [encrypt](https://github.com/surveycto/encrypt/blob/main/README.md) field plug-in.
+The gold standard for added security is still [form data encryption](https://support.surveycto.com/hc/en-us/articles/16472121582483) which can be combined with this field plug-in.
 
 *To use this field plug-in immediately, see [Getting started](#getting-started) below.*
 
 [![](extras/readme-images/beta-release-download.jpg)](https://github.com/surveycto/decrypt/raw/main/decrypt.fieldplugin.zip)
 
-*This plug-in is currently under beta. If you you find a problem with the field plug-in, please email support@surveycto.com, or submit an issue to this GitHub repo.*
+*This plug-in is currently under beta. If you find a problem with the field plug-in, please email plug-in-feedback@surveycto.com.*
 
 ### Features
 
-* Decrypt data encrypted using AES, an extremely popular and secure encryption standard.
-* Decrypt multiple pieces of data in one field plug-in.
+* Decrypt one or more pieces of data using one instance of the field plug-in.
 
-Note: This field plug-in currently only supports AES-CBC decryption. If popular enough, we could add other modes, such as AES-GCM. If you don't know what those are, don't worry, you don't have to know them to use this field plug-in.
+Note: This field plug-in currently only supports AES-CBC decryption.
 
 ### Requirements
 
@@ -37,7 +35,7 @@ For example, let's say the first piece of decrypted data has a value of "Adnan",
 Adnan|31|1
 ```
 
-Use the [item-at() function](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#Help_Forms_item-at) to retrieve this data. For example, if the field with the field plug-in has the *name* "decrypt", to retrieve the name (the first piece of data) from that list, use this expression:
+Use the [item-at() function](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#Help_Forms_item-at) to retrieve this data. For example, if the field with the field plug-in has the *name*, "decrypt", to retrieve the name (the first piece of data) from that list, use this expression:
 
 ```
 item-at('|', ${decrypt}, 0)
@@ -47,20 +45,20 @@ If the encryption details are wrong due to an incorrect passkey, IV, salt, or ci
 
 When you reach the field, it will display your field *label* (and *hint* and media if you include them as well) at the top, followed by the results of the decryption. If the decryption was successful, it will say "Success". However, if decryption failed, it will say "Failed", followed by the reason for the decryption failure. It will do this for each piece of encrypted data it receives.
 
-Note: If the provided encryption key, ciphertext, or IV are in the correct format, but one of those values is incorrect, then the decrypted data will be incorrect, and there will not be an error message. Make sure you always provide the correct decryption information.
+**Note**: If the provided encryption key, ciphertext, or IV are in the correct format, but one of those values is incorrect, then the decrypted data will be incorrect, and there will not be an error message. Make sure you always provide the correct decryption information.
 
 #### Metadata
 
 The metadata will be a pipe-separated list of the decryption status, in the same order as the data (similar to what appeared in the field *label*).
 
-For example, let's say there were three pieces of input. The first two were decrypted successfully as `Bhavna` and `30`, but the third input was `0`, which is not properly formatted encryption data for this field plug-in; it was probably manually entered into the data file without being encrypted first. The field data will be this:
-
-   Bhavna|30|0
-
+For example, let's say there are three pieces of input. The first two were decrypted successfully as `Bhavna` and `30`, but the third input was `0` (i.e. not a hidden, encrypted value). This would likely be the result of manually modifying the encrypted data file after encryption. The field data will be this:
+```
+Bhavna|30|0
+```
 And the field metadata will be this:
-
-   Success|Success|Failed: Missing IV. Unable to decrypt.
-
+```
+Success|Success|Failed: Missing IV. Unable to decrypt.
+```
 Use the [plug-in-metadata() function](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#plug-in-metadata) in your form (usually in a [*calculate* field](https://docs.surveycto.com/02-designing-forms/01-core-concepts/03zb.field-types-calculate.html)) to retrieve the metadata.
 
 ### Encrypting your data (IMPORTANT)
@@ -73,11 +71,11 @@ f5l2KcvRKodlSf6n06tqgQ==|XSFHs2RWb/w2bo5VC2+ipg==
 
 Here, the ciphertext is `f5l2KcvRKodlSf6n06tqgQ==`, and the IV is `XSFHs2RWb/w2bo5VC2+ipg==`. You will feed that combined, pipe-separated value into the field plug-in, and if you provide the correct decryption key, the field plug-in will decrypt it for you.
 
-You will provide the this data to the field plug-in using the [parameters](#parameters).
+You will provide this data to the field plug-in using the [parameters](#parameters).
 
 #### Storing encrypted data in a CSV file
 
-You can easily encrypt data using the [**scto-encryption**](https://github.com/surveycto/scto-encryption) Python package. You can create a CSV data with all of your data, and then encrypt that data with that Python package.
+You can easily encrypt data using the [scto-encryption](https://github.com/surveycto/scto-encryption) Python package. You can create a CSV data with all of your data, and then encrypt that data with that Python package.
 
 Once you have your CSV file with the encrypted data, you can [pre-load it](https://docs.surveycto.com/02-designing-forms/03-advanced-topics/03.preloading.html), and feed that data into the field plug-in. This is demonstrated in the [sample form](#getting-started). 
 
@@ -95,7 +93,7 @@ Once you have your CSV file with the encrypted data, you can [pre-load it](https
 
 ![](extras/readme-images/aes_key.png)
 
-If you choose *Manual entry*, the *default* field value will be the example encryption key.
+If you choose *Manual entry*, the *default* field value will be the example encryption key (i.e., you won't have to type it in. Do not modify the default value).
 
 **Warning**: This is just an example, and you should **not** publicly share your encryption key like this. You should use your own encryption key to encrypt and decrypt your data.
 
