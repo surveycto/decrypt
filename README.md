@@ -1,6 +1,7 @@
 # Decrypt (field plug-in)
 
 ## Description
+This field plug-in supports data decryption inside forms using [AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard). First, you must encrypt data either with the [scto-encryption package](https://github.com/surveycto/scto-encryption) (which can be [uploaded into a server dataset and pre-loaded](https://support.surveycto.com/hc/en-us/articles/11854783867539-Guide-to-dataset-publishing)) or encrypt data using the [decrypt field plug-in](https://github.com/surveycto/decrypt) in order to decrypt it. 
 
 This field plug-in decrypts data inside forms that was encrypted using [AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard). Provide an encryption key and input with encrypted data, and the plug-in will decrypt the input. This field plug-in was designed for use along with the [encrypt field plug-in](https://github.com/surveycto/encrypt) and the [scto-encryption package](https://github.com/surveycto/scto-encryption).
 
@@ -32,7 +33,7 @@ For example, let's say the first piece of decrypted data has a value of "Adnan",
 Adnan|31|1
 ```
 
-Use the [item-at() function](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#Help_Forms_item-at) to retrieve this data. For example, if the field with the field plug-in has the *name* "decrypt", to retrieve the name (the first piece of data) from that list, use this expression:
+Use the [item-at() function](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#Help_Forms_item-at) to retrieve this data. For example, if the field with the field plug-in has the *name*, "decrypt", to retrieve the name (the first piece of data) from that list, use this expression:
 
 ```
 item-at('|', ${decrypt}, 0)
@@ -42,20 +43,20 @@ If the encryption details are wrong due to an incorrect passkey, IV, salt, or ci
 
 When you reach the field, it will display your field *label* (and *hint* and media if you include them as well) at the top, followed by the results of the decryption. If the decryption was successful, it will say "Success". However, if decryption failed, it will say "Failed", followed by the reason for the decryption failure. It will do this for each piece of encrypted data it receives.
 
-Note: If the provided encryption key, ciphertext, or IV are in the correct format, but one of those values is incorrect, then the decrypted data will be incorrect, and there will not be an error message. Make sure you always provide the correct decryption information.
+**Note**: If the provided encryption key, ciphertext, or IV are in the correct format, but one of those values is incorrect, then the decrypted data will be incorrect, and there will not be an error message. Make sure you always provide the correct decryption information.
 
 #### Metadata
 
 The metadata will be a pipe-separated list of the decryption status, in the same order as the data (similar to what appeared in the field *label*).
 
-For example, let's say there were three pieces of input. The first two were decrypted successfully as `Bhavna` and `30`, but the third input was `0`, which is not properly formatted encryption data for this field plug-in; it was probably manually entered into the data file without being encrypted first. The field data will be this:
-
-   Bhavna|30|0
-
+For example, let's say there are three pieces of input. The first two were decrypted successfully as `Bhavna` and `30`, but the third input was `0` (i.e. not a hidden, encrypted value). This would likely be the result of manually modifying the encrypted data file after encryption. The field data will be this:
+```
+Bhavna|30|0
+```
 And the field metadata will be this:
-
-   Success|Success|Failed: Missing IV. Unable to decrypt.
-
+```
+Success|Success|Failed: Missing IV. Unable to decrypt.
+```
 Use the [plug-in-metadata() function](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#plug-in-metadata) in your form (usually in a [*calculate* field](https://docs.surveycto.com/02-designing-forms/01-core-concepts/03zb.field-types-calculate.html)) to retrieve the metadata.
 
 ### Encrypting your data (IMPORTANT)
@@ -68,11 +69,11 @@ f5l2KcvRKodlSf6n06tqgQ==|XSFHs2RWb/w2bo5VC2+ipg==
 
 Here, the ciphertext is `f5l2KcvRKodlSf6n06tqgQ==`, and the IV is `XSFHs2RWb/w2bo5VC2+ipg==`. You will feed that combined, pipe-separated value into the field plug-in, and if you provide the correct decryption key, the field plug-in will decrypt it for you.
 
-You will provide the this data to the field plug-in using the [parameters](#parameters).
+You will provide this data to the field plug-in using the [parameters](#parameters).
 
 #### Storing encrypted data in a CSV file
 
-You can easily encrypt data using the [**scto-encryption**](https://github.com/surveycto/scto-encryption) Python package. You can create a CSV data with all of your data, and then encrypt that data with that Python package.
+You can easily encrypt data using the [scto-encryption](https://github.com/surveycto/scto-encryption) Python package. You can create a CSV data with all of your data, and then encrypt that data with that Python package.
 
 Once you have your CSV file with the encrypted data, you can [pre-load it](https://docs.surveycto.com/02-designing-forms/03-advanced-topics/03.preloading.html), and feed that data into the field plug-in. This is demonstrated in the [sample form](#getting-started). 
 
@@ -90,7 +91,7 @@ Once you have your CSV file with the encrypted data, you can [pre-load it](https
 
 ![](extras/readme-images/aes_key.png)
 
-If you choose *Manual entry*, the *default* field value will be the example encryption key.
+If you choose *Manual entry*, the *default* field value will be the example encryption key (i.e., you won't have to type it in. Do not modify the default value).
 
 **Warning**: This is just an example, and you should **not** publicly share your encryption key like this. You should use your own encryption key to encrypt and decrypt your data.
 
