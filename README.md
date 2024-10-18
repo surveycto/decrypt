@@ -2,24 +2,19 @@
 
 ## Description
 
-Use this field plug-in to decrypt data that was encrypted using AES.
+This field plug-in decrypts data inside forms that was encrypted using [AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard). Provide an encryption key and input with encrypted data, and the plug-in will decrypt the input. This field plug-in was designed for use along with the [encrypt field plug-in](https://github.com/surveycto/encrypt) and the [scto-encryption package](https://github.com/surveycto/scto-encryption).
 
-Currently, the best way to protect SurveyCTO form data is using our end-to-end encryption feature, which you can learn about in our support article [How to encrypt a form](https://support.surveycto.com/hc/en-us/articles/16472121582483). And, the best way to protect all SurveyCTO data (including server dataset data) is to use existing SurveyCTO security features, which you can read about [here](https://github.com/surveycto/decrypt/blob/main/extras/best_encryption.md).
+This plug-in provides an upgrade in secure management of sensitive data that is used to identify individuals in the field. Learn more in [this guide](https://support.surveycto.com/hc/en-us/articles/33842170036499).
 
-However, if you would like an extra level of security, you can also encrypt your data using your own AES encryption key. You can even store that data in a CSV file or [server dataset](https://support.surveycto.com/hc/en-us/articles/11854064982675) for [pre-loading](https://docs.surveycto.com/02-designing-forms/03-advanced-topics/03.preloading.html), including data that was encrypted using the [encrypt](https://github.com/surveycto/encrypt/blob/main/README.md) field plug-in.
+The gold standard for added security is still [form data encryption](https://support.surveycto.com/hc/en-us/articles/16472121582483). Use form data encryption to protect any data that is not being directly published to the server dataset.
 
-*To use this field plug-in immediately, see [Getting started](#getting-started) below.*
-
-[![](extras/readme-images/beta-release-download.jpg)](https://github.com/surveycto/decrypt/raw/main/decrypt.fieldplugin.zip)
-
-*This plug-in is currently under beta. If you you find a problem with the field plug-in, please email support@surveycto.com, or submit an issue to this GitHub repo.*
+*This plug-in is currently in beta. If you you find a problem with the field plug-in, please email plug-in-feedback@surveycto.com, or submit an issue to this GitHub repo.*
 
 ### Features
 
-* Decrypt data encrypted using AES, an extremely popular and secure encryption standard.
-* Decrypt multiple pieces of data in one field plug-in.
+* Decrypt one or more pieces of data using a single instance of the field plug-in.
 
-Note: This field plug-in currently only supports AES-CBC decryption. If popular enough, we could add other modes, such as AES-GCM. If you don't know what those are, don't worry, you don't have to know them to use this field plug-in.
+**Note**: This field plug-in currently only supports AES-CBC decryption.
 
 ### Requirements
 
@@ -103,7 +98,7 @@ If you decide to use a QR code to store your encryption key, make sure that QR c
 
 ### Parameters
 
-For named parameters, this field plug-in has 1 required parameter and 1 optional parameter.
+For named parameters, this field plug-in has one required parameter and one optional parameter.
 
 In addition to the named parameters, add a parameter for each piece of ciphertext/IV. The name of the parameter can be anything (as long as they are unique). For example, let's say there are three form fields that store ciphertext: "enc_resp_name", "enc_age", and "enc_marital". You can give the field this *appearance*:
 
@@ -114,7 +109,9 @@ custom-decrypt(key=${key},
 2=${enc_marital})
 ```
 
-The first parameter is the required parameter, while the second, third, and fourth parameters take the encrypted data (which, as discussed [above](#encrypting-your-data-important), includes both the ciphertext and IV). These parameters have the names "0", "1", and "2", but their names don't actually matter (as long as they are unique, e.g. you cannot have two parameters called "0"). This field's *value* will be the decrypted values of the fields "enc_name", "enc_age", and "enc_marital" in that order in a pipe-separated list.
+The first parameter is the required parameter, while the second, third, and fourth parameters take the encrypted data (which, as discussed [above](#encrypting-your-data-important), includes both the ciphertext and IV). These parameters have the names "0", "1", and "2", but their names don't actually matter (as long as they are unique, e.g. you cannot have two parameters called "0").  You can use use numbers and letters in parameter names (e.g. the parameter name `0` can be `respondent_name` instead, or anything else).
+
+While the parameter names do not matter, the parameter **order** does matter. This field's *value* will be the decrypted values of the fields "enc_resp_name", "enc_age", and "enc_marital" in the same order as the parameters in a pipe-separated list.
 
 Here are the named parameters:
 
