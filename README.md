@@ -1,11 +1,13 @@
 # Decrypt (field plug-in)
 
+![Screenshot](extras/readme-images/decrypt_plugin.png)
+
 ## Description
 This field plug-in supports data decryption inside forms using [AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard). First, you must encrypt data either with the [scto-encryption package](https://github.com/surveycto/scto-encryption) (which can be [uploaded into a server dataset and pre-loaded](https://support.surveycto.com/hc/en-us/articles/11854783867539-Guide-to-dataset-publishing)) or encrypt data using the [decrypt field plug-in](https://github.com/surveycto/decrypt) in order to decrypt it. 
 
-Together with these other resources, this plug-in provides an upgrade in secure management of sensitive data that is used to identify individuals in the the field. Learn more in [this guide](https://support.surveycto.com/hc/en-us/articles/33842170036499).
+Together with these other resources, the decrypt plug-in provides an upgrade in secure management of sensitive data that is used to identify individuals in the field. Learn more in [this guide](https://support.surveycto.com/hc/en-us/articles/33842170036499).
 
-The gold standard for added security is still [form data encryption](https://support.surveycto.com/hc/en-us/articles/16472121582483) which can be combined with this field plug-in.
+The gold standard for added security is still [form data encryption](https://support.surveycto.com/hc/en-us/articles/16472121582483). Use form data encryption to protect any data that is not being directly published to the server dataset.
 
 *To use this field plug-in immediately, see [Getting started](#getting-started) below.*
 
@@ -59,7 +61,7 @@ And the field metadata will be this:
 ```
 Success|Success|Failed: Missing IV. Unable to decrypt.
 ```
-Use the [plug-in-metadata() function](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#plug-in-metadata) in your form (usually in a [*calculate* field](https://docs.surveycto.com/02-designing-forms/01-core-concepts/03zb.field-types-calculate.html)) to retrieve the metadata.
+Use the [plug-in-metadata() function](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#plug-in-metadata) in your form in a [*calculate* field](https://docs.surveycto.com/02-designing-forms/01-core-concepts/03zb.field-types-calculate.html) to retrieve the metadata.
 
 ### Encrypting your data (IMPORTANT)
 
@@ -95,9 +97,9 @@ Once you have your CSV file with the encrypted data, you can [pre-load it](https
 
 If you choose *Manual entry*, the *default* field value will be the example encryption key (i.e., you won't have to type it in. Do not modify the default value).
 
-**Warning**: This is just an example, and you should **not** publicly share your encryption key like this. You should use your own encryption key to encrypt and decrypt your data.
+**Warning**: This is just an example, and you should **not** publicly share your encryption key like this. Nor should you hard-code the encryption key into your form design (this also nullifies the security benefit). You should use your own encryption key to encrypt and decrypt your data.
 
-If you decide to use a QR code to store your encryption key, make sure that QR code is well-protected, since anyone who has that QR code can decrypt your data.
+If you decide to use a QR code to store your encryption key, make sure that QR code is well-protected, since anyone who has access to the QR code and your form (whether on Collect or the server) can decrypt your data.
 
 ### Parameters
 
@@ -119,7 +121,7 @@ Here are the named parameters:
 |Name|Description|
 |---|---|
 |`key` (required)| The passkey that was used to encrypt the data, which will be used to decrypt the data. **This key must be Base64-encoded**. |
-|`separator` (optional) | The separator used in the list returned by the field plug-in. This should be a value that does not exist in your decrypted data (but it can exist in the ciphertext).<br>**Default**: `\|` |
+|`separator` (optional) | The separator used in the list returned by the field plug-in. This should be a value that does not exist in your decrypted data (but it can exist in the ciphertext). The default is a pipe character (`\|`). |
 
 ### Default SurveyCTO feature support
 
